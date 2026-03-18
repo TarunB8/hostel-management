@@ -191,7 +191,7 @@ function showOutpass() {
 }
 
 /* ================= Fetch Student Details ================= */
-fetch(`http://localhost:3000/student/details/${userId}`)
+fetch(`/student/details/${userId}`)
 .then(res => res.json())
 .then(data => {
     document.getElementById("studentDetails").innerHTML = `
@@ -222,7 +222,7 @@ function showOutpassForm() {
 
 /* ================= Load Outpasses ================= */
 function loadOutpasses(status) {
-    fetch(`http://localhost:3000/student/outpasses/${userId}`)
+    fetch(`/student/outpasses/${userId}`)
     .then(res => res.json())
     .then(rows => {
         const filtered = rows.filter(r => r.status === status);
@@ -239,7 +239,7 @@ function loadOutpasses(status) {
                 const cls = index === 0 ? "qr-card qr-latest" : "qr-card qr-old";
                 html += `
                     <div class="${cls}">
-                        <img src="http://localhost:3000/outpass-qr/${r.qr_token}" width="130"><br>
+                        <img src="/outpass-qr/${r.qr_token}" width="130"><br>
                         <small>Approved at:</small><br>
                         ${new Date(r.approved_at).toLocaleString()}
                     </div>

@@ -632,5 +632,26 @@ app.post('/api/addTransaction', async (req, res) => {
     }
 });
 
+app.get('/api/getRegNo/:user_id', async (req, res) => {
+    try {
+        const { user_id } = req.params;
+
+        const [rows] = await db.query(
+            `SELECT reg_no FROM railway.students WHERE userId = ?`,
+            [user_id]
+        );
+
+        if (!rows.length) {
+            return res.status(404).json({ error: "Student not found" });
+        }
+
+        res.json({ reg_no: rows[0].reg_no });
+
+    } catch (err) {
+        console.error("getRegNo error:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Start server
 app.listen(3000, () => console.log("Hostel Management Server running on port 3000"));

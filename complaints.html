@@ -118,7 +118,7 @@ button:hover {
 <div class="container">
 <h2>Raise a Complaint</h2>
 
-<form action="http://localhost:3000/student/submit-complaint" method="POST">
+<form action="/student/submit-complaint" method="POST">
 
     <!-- 🔒 HIDDEN FIELDS -->
     <input type="hidden" name="user_id" id="user_id">
@@ -171,7 +171,7 @@ function toggleSidebar() {
 }
 
 /* ================= Fetch student data ================= */
-fetch(`http://localhost:3000/student/details/${userId}`)
+fetch(`/student/details/${userId}`)
 .then(res => res.json())
 .then(data => {
     document.getElementById("user_id").value = data.user_id;

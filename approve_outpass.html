@@ -196,7 +196,7 @@ function toggleSidebar() {
 document.addEventListener("DOMContentLoaded", loadRequests);
 
 function loadRequests() {
-    fetch("http://localhost:3000/warden/outpass-requests")
+    fetch("/warden/outpass-requests")
         .then(res => res.json())
         .then(data => {
             const tbody = document.getElementById("tableBody");
@@ -237,7 +237,7 @@ function loadRequests() {
 function approve(id) {
     if (!confirm("Approve this outpass?")) return;
 
-    fetch(`http://localhost:3000/warden/approve-outpass/${id}`, {
+    fetch(`/warden/approve-outpass/${id}`, {
         method: "POST"
     })
     .then(() => {
@@ -249,7 +249,7 @@ function approve(id) {
 function rejectReq(id) {
     if (!confirm("Reject this outpass?")) return;
 
-    fetch(`http://localhost:3000/warden/reject-outpass/${id}`, {
+    fetch(`/warden/reject-outpass/${id}`, {
         method: "POST"
     })
     .then(() => {
@@ -260,7 +260,7 @@ function rejectReq(id) {
 
 function showQR(token) {
     document.getElementById("qrImage").innerHTML =
-        `<img src="http://localhost:3000/outpass-qr/${token}" width="200">`;
+        `<img src="/outpass-qr/${token}" width="200">`;
     document.getElementById("qrModal").style.display = "block";
 }
 

@@ -51,31 +51,54 @@ button:disabled {
 </div>
 
 <script>
-const reg_no = "23B81A4654"; // dynamic later
+const BASE_URL = window.location.hostname === "localhost"
+  ? "http://localhost:3000"
+  : "https://crrehostel.onrender.com";
+
+const user_id = localStorage.getItem("user_id");
+
+if (!user_id) {
+    alert("Please login first");
+    window.location.href = "index.html";
+}
+
+let reg_no = "";
 
 async function loadFees() {
-    const res = await fetch(`/api/getFees?reg_no=${reg_no}`);
-    const data = await res.json();
+    try {
+        // Step 1: Get reg_no
+        const regRes = await fetch(`${BASE_URL}/api/getRegNo/${user_id}`);
+        const regData = await regRes.json();
+        reg_no = regData.reg_no;
 
-    const container = document.getElementById("fees");
-    container.innerHTML = "";
+        // Step 2: Get fees
+        const res = await fetch(`${BASE_URL}/api/getFees?reg_no=${reg_no}`);
+        const data = await res.json();
 
-    data.forEach(fee => {
-        const div = document.createElement("div");
-        div.className = "card";
+        const container = document.getElementById("fees");
+        container.innerHTML = "";
 
-        div.innerHTML = `
-            <div>
-                <h3>${fee.type}</h3>
-                <p>Amount: ₹${fee.amount}</p>
-            </div>
-            <button onclick="pay('${fee.type}', ${fee.amount})" ${fee.amount <= 0 ? "disabled" : ""}>
-                Pay
-            </button>
-        `;
+        data.forEach(fee => {
+            const div = document.createElement("div");
+            div.className = "card";
 
-        container.appendChild(div);
-    });
+            div.innerHTML = `
+                <div>
+                    <h3>${fee.type}</h3>
+                    <p>Amount: ₹${fee.amount}</p>
+                </div>
+                <button onclick="pay('${fee.type}', ${fee.amount})" ${fee.amount <= 0 ? "disabled" : ""}>
+                    Pay
+                </button>
+            `;
+
+            container.appendChild(div);
+        });
+
+    } catch (err) {
+        console.error("Error loading fees:", err);
+        alert("Failed to load fees");
+    }
 }
 
 function pay(type, amount) {
@@ -88,7 +111,7 @@ function pay(type, amount) {
 
         if (!txn) return;
 
-        fetch("/api/addTransaction", {
+        fetch(`${BASE_URL}/api/addTransaction`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
@@ -108,6 +131,5 @@ function pay(type, amount) {
 
 loadFees();
 </script>
-
 </body>
 </html>

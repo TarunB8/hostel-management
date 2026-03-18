@@ -94,7 +94,7 @@ if (!userId) {
 document.getElementById("user_id").value = userId;
 
 // Fetch student name
-fetch(`http://localhost:3000/student/details/${userId}`)
+fetch(`/student/details/${userId}`)
     .then(res => res.json())
     .then(data => {
         document.getElementById("student_name").value = data.name;
@@ -114,7 +114,7 @@ document.getElementById("outpassForm").addEventListener("submit", async function
         reason: this.reason.value
     };
 
-    const res = await fetch("http://localhost:3000/request-outpass", {
+    const res = await fetch("/request-outpass", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
