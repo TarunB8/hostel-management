@@ -20,12 +20,21 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname));
 
 // Database connection
+require('dotenv').config();
+const mysql = require('mysql2');
+
+// Database connection
 const db = mysql.createPool({
-    host: "147.93.96.24",
-    user: "root",
-    password: "Sircrrcoestd@2025",
-    database: "hostel_management_system"
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
+
+module.exports = db;
 
 // ================================
 //      POST - HOSTEL FORM SUBMIT
