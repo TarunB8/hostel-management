@@ -20,7 +20,7 @@ app.use(express.static(__dirname));
 
 // Database connection
 require('dotenv').config();
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
 // Database connection
 const db = mysql.createPool({
