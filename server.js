@@ -699,5 +699,65 @@ app.post('/api/addTransaction', async (req, res) => {
     }
 });
 
+// routes/hostel.js
+
+app.get("/api/hostel/students", async (req, res) => {
+    try {
+        const userId = req.user.userid; // from session / JWT
+
+        let hostelType;
+
+        if (userId.startsWith("BH")) {
+            hostelType = "BOYS_HOSTEL";
+        } else if (userId.startsWith("GH")) {
+            hostelType = "GIRLS_HOSTEL";
+        } else {
+            return res.status(403).json({ message: "Unauthorized Access" });
+        }
+
+        const query = `
+            SELECT 
+                s.id,
+                s.name,
+                s.reg_no,
+                s.course,
+                s.year,
+                s.section,
+                s.mobile_no,
+                s.photo_url,
+                s.residence_type,
+                COALESCE(b.total_backlogs, 0) AS backlogs
+            FROM students s
+            LEFT JOIN (
+                SELECT regno, COUNT(*) AS total_backlogs
+                FROM (
+                    -- JNTUK
+                    SELECT regno, subcode
+                    FROM results
+                    WHERE grade IN ('F', 'Ab', 'NOT_COMPLETED')
+
+                    UNION ALL
+
+                    -- Autonomous (UPDATED)
+                    SELECT regno, subcode
+                    FROM autonomous_results
+                    WHERE grade IN ('F', 'Ab', '-Ab-')
+                ) AS combined
+                GROUP BY regno
+            ) b ON s.reg_no = b.regno
+            WHERE s.residence_type = ?
+            ORDER BY backlogs DESC
+        `;
+
+        const [students] = await db.execute(query, [hostelType]);
+
+        res.json(students);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+});
+
 // Start server
 app.listen(3000, () => console.log("Hostel Management Server running on port 3000"));

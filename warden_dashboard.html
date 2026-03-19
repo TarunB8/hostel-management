@@ -68,6 +68,47 @@ body {
 .card p {
     color: #555;
 }
+
+#studentList {
+    margin-top: 20px;
+}
+
+.student-card {
+    background: white;
+    padding: 15px;
+    margin: 15px auto;
+    max-width: 700px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 0 10px #ccc;
+    transition: 0.3s;
+}
+
+.student-card:hover {
+    transform: scale(1.02);
+}
+
+.student-card img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+.details {
+    flex: 1;
+    text-align: left;
+}
+
+.backlogs {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.red { color: #e11d48; }
+.green { color: #16a34a; }
+
 </style>
 </head>
 
@@ -88,12 +129,18 @@ body {
 
 <!-- MAIN CONTENT -->
 <div class="content">
-    <div class="card">
+    <div class="card" id="welcomeCard">
         <h2>Welcome, Warden</h2>
         <p>
             Use the sidebar menu to manage hostel attendance,  
             student outpass approvals, and hostel admissions.
         </p>
+    </div>
+
+    <!-- Student List Section -->
+    <div id="studentSection" style="display:none;">
+        <h2>Hostel Admission Renewal</h2>
+        <div id="studentList"></div>
     </div>
 </div>
 
@@ -110,14 +157,74 @@ function goAttendance() {
 }
 
 function goOutpass() {
-    // ✅ UPDATED HERE
     window.location.href = "approve_outpass.html";
 }
 
-function goAdmission() {
-    window.location.href = "hostel-admissions.html";
+// ✅ UPDATED FUNCTION
+async function goAdmission() {
+
+    // Hide welcome card
+    document.getElementById("welcomeCard").style.display = "none";
+
+    // Show student section
+    document.getElementById("studentSection").style.display = "block";
+
+    const container = document.getElementById("studentList");
+    container.innerHTML = "Loading...";
+
+    try {
+        const res = await fetch("/api/hostel/students");
+        const data = await res.json();
+
+        container.innerHTML = "";
+
+        if (data.length === 0) {
+            container.innerHTML = "<p>No students found</p>";
+            return;
+        }
+
+        data.forEach(student => {
+
+            let status = "Eligible ✅";
+            let statusColor = "green";
+
+            if (student.backlogs > 5) {
+                status = "Not Eligible ❌";
+                statusColor = "red";
+            }
+
+            const card = document.createElement("div");
+            card.className = "student-card";
+
+            card.innerHTML = `
+                <img src="${student.photo_url || 'https://via.placeholder.com/70'}">
+
+                <div class="details">
+                    <h3>${student.name}</h3>
+                    <p>Reg No: ${student.reg_no}</p>
+                    <p>${student.course} - ${student.year}</p>
+                    <p>Section: ${student.section}</p>
+                    <p>Mobile: ${student.mobile_no}</p>
+                </div>
+
+                <div>
+                    <p class="backlogs ${student.backlogs > 0 ? 'red' : 'green'}">
+                        Backlogs: ${student.backlogs}
+                    </p>
+                    <p class="${statusColor}">
+                        ${status}
+                    </p>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = "<p>Error loading students</p>";
+    }
 }
 </script>
-
 </body>
 </html>
