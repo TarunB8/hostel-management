@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hostel Portal Login | Sir C.R. Reddy College of Engineering</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="crrengglogo.png" type="image/png" />
+
+  <style>
+    :root {
+      --main-color:#3cb6ff;
+      --accent-color:#ff3d3d;
+      --text-light:#fefefe;
+      --glow:0 0 15px var(--main-color);
+      --focus:#ffd166;
+    }
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    }
+    body{
+      background:url('https://upload.wikimedia.org/wikipedia/commons/9/92/C.R.Reddy_College_Aerial_View.jpg')
+                 no-repeat center center/cover;
+      min-height:100vh;
+      overflow-y:auto;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      align-items:center;
+      color:#fff;
+    }
+    .overlay{
+      background:rgba(0,0,0,0.65);
+      width:100%;
+      height:100%;
+      position:absolute;
+      top:0;
+      left:0;
+      z-index:-1;
+    }
+    .main-wrapper{
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      align-items:center;
+      min-height:100vh;
+      padding:24px 0 20px;
+      width:100%;
+    }
+    .branding{
+      text-align:center;
+      animation:popIn 1.2s ease forwards;
+      margin-top:40px;
+      padding:0 12px;
+    }
+    .brand-row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    }
+    .branding img{
+      width:70px;
+      filter:drop-shadow(0 0 8px rgba(255,255,255,0.5));
+      animation:logoFloat 2s ease-in-out infinite alternate;
+    }
+    @keyframes logoFloat{
+      0%{transform:translateY(0)}
+      100%{transform:translateY(-6px);filter:drop-shadow(0 0 12px rgba(255,255,255,0.9));}
+    }
+    .branding h1{
+      font-size:26px;
+      text-shadow:var(--glow);
+    }
+    .autonomous{
+      font-size:18px;
+      font-weight:700;
+      color:#f19336fb;
+      margin-top:6px;
+      text-align:center;
+      text-shadow:0 0 8px rgba(255,0,0,0.6);
+    }
+    .system-heading{
+      font-size:24px;
+      font-weight:700;
+      color:#fff;
+      margin-top:18px;
+      margin-bottom:14px;
+      text-align:center;
+      text-shadow:0 0 12px rgba(60,182,255,0.8);
+      padding:0 12px;
+    }
+
+    /* Role buttons */
+    .role-buttons{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:18px;
+      margin:18px 0 10px;
+      padding:0 12px;
+    }
+    .role-button{
+      padding:14px 30px;
+      font-size:17px;
+      border-radius:14px;
+      font-weight:600;
+      background:rgba(255,255,255,0.08);
+      color:#fff;
+      border:0;
+      cursor:pointer;
+      transition:0.3s ease;
+      position:relative;
+    }
+    .role-button::after{
+      content:"";
+      position:absolute;
+      bottom:0;
+      left:0;
+      height:3px;
+      width:0;
+      background:var(--main-color);
+      transition:0.3s ease;
+    }
+    .role-button:hover::after,
+    .role-button.active::after{
+      width:100%;
+    }
+    .role-button:hover,
+    .role-button.active,
+    .role-button:focus-visible{
+      border:1.5px solid var(--main-color);
+      background:rgba(60,182,255,0.2);
+      box-shadow:0 0 12px var(--main-color);
+      outline:3px solid var(--focus);
+      outline-offset:2px;
+    }
+
+    /* Login cards */
+    .login-container{
+      display:none;
+      opacity:0;
+      transform:translateY(100px) scale(0.95);
+      transition:opacity 0.8s ease, transform 0.8s ease;
+      max-width:340px;
+      width:90%;
+      background:rgba(255,255,255,0.06);
+      border-radius:18px;
+      padding:20px 20px 22px;
+      border:1px solid rgba(255,255,255,0.16);
+      box-shadow:0 0 25px rgba(0,191,255,0.24);
+      margin-top:10px;
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+    }
+    .login-container.show{
+      display:block;
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+    .login-container h2{
+      color:white;
+      text-align:center;
+      margin-bottom:16px;
+      font-size:20px;
+    }
+    .login-container label{
+      font-size:13px;
+      margin-bottom:6px;
+      display:block;
+    }
+    .login-container input{
+      width:100%;
+      padding:11px 12px;
+      margin-bottom:15px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.25);
+      color:white;
+    }
+    .login-container input::placeholder{ color:#cbd5f5; }
+    .login-container input:focus-visible{
+      outline:3px solid var(--focus);
+      outline-offset:2px;
+    }
+    .login-container button{
+      width:100%;
+      padding:13px;
+      background:linear-gradient(135deg, var(--main-color), var(--accent-color));
+      border:none;
+      border-radius:50px;
+      color:white;
+      font-weight:bold;
+      font-size:16px;
+      cursor:pointer;
+      box-shadow:0 0 15px var(--main-color);
+      transition:transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .login-container button:hover,
+    .login-container button:focus-visible{
+      transform:scale(1.03);
+      box-shadow:0 0 25px var(--accent-color);
+      outline:3px solid var(--focus);
+      outline-offset:2px;
+    }
+    .error{
+      color:#ffb4b4;
+      text-align:center;
+      margin-top:8px;
+      font-size:13px;
+      min-height:18px;
+    }
+
+    .footer{
+      text-align:center;
+      padding:10px;
+      color:#ccc;
+      font-size:13px;
+      background:rgba(0,0,0,0.6);
+      width:100%;
+      margin-top:24px;
+    }
+    .footer a{ color:#3cb6ff; text-decoration:underline; }
+
+    @keyframes popIn{
+      0%{opacity:0; transform:translateY(20px);}
+      100%{opacity:1; transform:translateY(0);}
+    }
+
+    @media(max-width:480px){
+      .branding h1{ font-size:20px; }
+      .system-heading{ font-size:19px; }
+      .role-button{ font-size:15px; padding:12px 22px; }
+      .login-container{ margin:16px; padding:18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" aria-hidden="true"></div>
+
+  <main class="main-wrapper" id="main" role="main" aria-label="CRR Hostel Management System">
+    <!-- Branding -->
+    <div class="branding" role="banner">
+      <div class="brand-row">
+        <img src="crrengglogo.png" alt="CRR logo" />
+        <h1>Sir C.R. Reddy College of Engineering</h1>
+      </div>
+      <h2 class="autonomous">(AUTONOMOUS)</h2>
+    </div>
+
+    <div class="system-heading">HOSTEL MANAGEMENT SYSTEM</div>
+
+    <!-- Role selector -->
+    <div class="role-buttons" role="group" aria-label="Select hostel role">
+      <button class="role-button" data-role="student" type="button">👨‍🎓 Student</button>
+      <button class="role-button" data-role="warden" type="button">🏢 Warden</button>
+      <button class="role-button" data-role="admin" type="button">🛡️ Admin</button>
+    </div>
+
+    <!-- Student login -->
+    <section class="login-container" id="student-login" role="region" aria-label="Student login" aria-hidden="true">
+      <h2>Student Hostel Login</h2>
+      <form class="login-form" data-role="student">
+        <label for="studentUserId">User ID</label>
+        <input id="studentUserId" name="user_id" type="text" autocomplete="username"
+               placeholder="Enter Student ID" required />
+
+        <label for="studentPwd">Password</label>
+        <input id="studentPwd" name="password" type="password" autocomplete="current-password"
+               placeholder="Enter Password" required />
+
+        <button type="submit">Login as Student</button>
+        <div class="error"></div>
+      </form>
+    </section>
+
+    <!-- Warden login -->
+    <section class="login-container" id="warden-login" role="region" aria-label="Warden login" aria-hidden="true">
+      <h2>Warden Hostel Login</h2>
+      <form class="login-form" data-role="warden">
+        <label for="wardenUserId">User ID</label>
+        <input id="wardenUserId" name="user_id" type="text" autocomplete="username"
+               placeholder="Enter Warden ID" required />
+
+        <label for="wardenPwd">Password</label>
+        <input id="wardenPwd" name="password" type="password" autocomplete="current-password"
+               placeholder="Enter Password" required />
+
+        <button type="submit">Login as Warden</button>
+        <div class="error"></div>
+      </form>
+    </section>
+
+    <!-- Admin login -->
+    <section class="login-container" id="admin-login" role="region" aria-label="Admin login" aria-hidden="true">
+      <h2>Admin Hostel Login</h2>
+      <form class="login-form" data-role="admin">
+        <label for="adminUserId">User ID</label>
+        <input id="adminUserId" name="user_id" type="text" autocomplete="username"
+               placeholder="Enter Admin ID" required />
+
+        <label for="adminPwd">Password</label>
+        <input id="adminPwd" name="password" type="password" autocomplete="current-password"
+               placeholder="Enter Password" required />
+
+        <button type="submit">Login as Admin</button>
+        <div class="error"></div>
+      </form>
+    </section>
+  </main>
+
+  <div class="footer" role="contentinfo">
+    Developed by Cyber Security Students | Hostel Management Portal
+  </div>
+
+  <script>
+    // Role toggle
+    const roleButtons = document.querySelectorAll(".role-button");
+    const containers = {
+      student: document.getElementById("student-login"),
+      warden: document.getElementById("warden-login"),
+      admin: document.getElementById("admin-login")
+    };
+
+    function showContainer(role) {
+      Object.keys(containers).forEach(r => {
+        const el = containers[r];
+        if (!el) return;
+        if (r === role) {
+          el.classList.add("show");
+          el.setAttribute("aria-hidden","false");
+        } else {
+          el.classList.remove("show");
+          el.setAttribute("aria-hidden","true");
+        }
+      });
+    }
+
+    roleButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const role = btn.dataset.role;
+        roleButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        showContainer(role);
+      });
+    });
+
+    // Default: show student
+    (function initDefault() {
+      const first = document.querySelector('.role-button[data-role="student"]');
+      if (first) {
+        first.classList.add("active");
+        showContainer("student");
+      }
+    })();
+
+    // Login submit (uses /login like your original page)
+    document.querySelectorAll(".login-form").forEach(form => {
+      form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const role = this.dataset.role; // student / warden / admin
+        const user_id = this.user_id.value.trim();
+        const password = this.password.value.trim();
+        const errorBox = this.querySelector(".error");
+        errorBox.textContent = "";
+
+        if (!user_id || !password) {
+          errorBox.textContent = "Please enter User ID and Password.";
+          return;
+        }
+
+        try {
+          const res = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id, password, role })
+          });
+
+          const data = await res.json();
+
+          if (!data.success) {
+            errorBox.textContent = data.message || "Login failed. Check your credentials.";
+            return;
+          }
+
+          // clear & store
+          localStorage.clear();
+          localStorage.setItem("user_id", data.user_id || user_id);
+          localStorage.setItem("role", data.role || role);
+
+          const finalRole = data.role || role;
+
+          // redirects – change paths as needed
+          if (finalRole === "student") {
+            window.location.href = "hostel_student_dashboard.html";
+          } else if (finalRole === "warden") {
+            window.location.href = "hostel_warden_dashboard.html";
+          } else if (finalRole === "admin") {
+            window.location.href = "hostel_admin_dashboard.html";
+          } else {
+            errorBox.textContent = "Unknown role from server.";
+          }
+        } catch (err) {
+          console.error("Login error:", err);
+          const errorBox = this.querySelector(".error");
+          errorBox.textContent = "Server error. Please try again.";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
