@@ -174,6 +174,7 @@
             transition: color 0.2s ease-out, background 0.2s ease-out, transform 0.2s ease-out;
         }
 
+        /* Remove underline effect */
         .header-nav-link::after {
             content: "";
             position: absolute;
@@ -186,6 +187,7 @@
             transform-origin: center;
             transform: scaleX(0);
             transition: transform 0.2s ease-out;
+            display: none;
         }
 
         .header-nav-link:hover {
@@ -194,28 +196,23 @@
             transform: translateY(-1px);
         }
 
-        .header-nav-link:hover::after {
-            transform: scaleX(1);
-        }
-
+        /* Improved active style */
         .header-nav-link.active {
             color: #facc15;
-        }
-
-        .header-nav-link.active::after {
-            transform: scaleX(1);
+            background: rgba(255,255,255,0.15);
+            border-radius: 999px;
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 14px; /* optional polish */
         }
 
         .header-pill {
             padding: 4px 10px;
             border-radius: var(--radius-pill);
-            font-size: 0.74rem;
+            font-size: 0.7rem; /* optional polish: slightly smaller */
             background: rgba(15, 23, 42, 0.35);
             border: 1px solid rgba(226, 232, 240, 0.5);
             color: #e5e7eb;
@@ -231,13 +228,14 @@
             background: radial-gradient(circle, #22c55e, #16a34a);
         }
 
+        /* PRIMARY LOGIN BUTTON */
         .btn-login {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            background: linear-gradient(135deg, #4f46e5, #9333ea);
             color: #ffffff;
             border: none;
             padding: 10px 18px;
             border-radius: 999px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -262,14 +260,26 @@
         }
 
         .btn-login:hover {
-            transform: scale(1.05);
-            box-shadow: 0 18px 40px rgba(79, 70, 229, 0.45);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 45px rgba(99, 102, 241, 0.5);
             filter: brightness(1.05);
         }
 
         .btn-login:active {
             transform: scale(1.0);
             box-shadow: 0 10px 22px rgba(15, 23, 42, 0.65);
+        }
+
+        /* Sidebar login = secondary */
+        .mobile-login .btn-login {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+        }
+
+        .mobile-login .btn-login:hover {
+            background: rgba(255,255,255,0.25);
         }
 
         /* BACKDROP for mobile nav */
@@ -815,7 +825,7 @@
             margin-bottom: 4px;
         }
 
-        /* ===== MOBILE NAV TOGGLE (slide-in) ===== */
+        /* ===== MOBILE NAV TOGGLE (premium sidebar) ===== */
         @media (max-width: 768px) {
 
             .menu-toggle {
@@ -835,16 +845,17 @@
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: 75%;
+                width: 78%;
                 height: 100vh;
-                background: linear-gradient(180deg, #2563eb, #6366f1);
+                background: linear-gradient(180deg, #1e3a8a, #6366f1);
                 display: flex;
                 flex-direction: column;
-                padding: 80px 20px 20px;
+                padding: 90px 20px 20px;
                 gap: 18px;
                 transform: translateX(-100%);
-                transition: transform 0.35s ease;
+                transition: transform 0.4s ease;
                 z-index: 100;
+                box-shadow: 20px 0 60px rgba(0,0,0,0.4);
             }
 
             .header-nav.open {
@@ -854,7 +865,23 @@
             .header-nav-link {
                 font-size: 1rem;
                 width: 100%;
-                padding: 10px 12px;
+                padding: 12px 14px;
+                border-radius: 12px;
+                transition: 0.3s;
+            }
+
+            .header-nav-link:hover {
+                background: rgba(255,255,255,0.15);
+                transform: translateX(6px);
+            }
+
+            .header-nav-link.active {
+                background: rgba(255,255,255,0.2);
+                color: #facc15;
+            }
+
+            .header-nav-link.active::after {
+                display: none;
             }
 
             .mobile-login {
@@ -905,6 +932,14 @@
                 padding: 30px 22px;
             }
         }
+
+        /* Extra small: full-width buttons (used for header + sidebar) */
+        @media (max-width: 480px) {
+            .btn-login {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -938,7 +973,8 @@
 
                 <!-- Nav -->
                 <nav class="header-nav" id="mobileNav">
-                    <a href="#overview" class="header-nav-link active">Overview</a>
+                    <!-- FIX: no default active; JS will set -->
+                    <a href="#overview" class="header-nav-link">Overview</a>
                     <a href="#hostels" class="header-nav-link">Hostels</a>
                     <a href="#facilities" class="header-nav-link">Facilities</a>
                     <a href="#rules" class="header-nav-link">Rules</a>
@@ -946,7 +982,7 @@
                     <a href="#notifications" class="header-nav-link">Notices</a>
                     <a href="#contact" class="header-nav-link">Contact</a>
 
-                    <!-- Mobile login button inside menu -->
+                    <!-- Mobile login button inside menu (secondary look) -->
                     <div class="mobile-login">
                         <a href="login.html" class="btn-login">
                             <span class="icon">⮕</span>
@@ -955,7 +991,7 @@
                     </div>
                 </nav>
 
-                <!-- Right actions (hidden on mobile) -->
+                <!-- Right actions (primary login, hidden on mobile) -->
                 <div class="header-actions">
                     <div class="header-pill">
                         <div class="header-pill-dot"></div>
@@ -1004,6 +1040,7 @@
                         <p class="hero-note">
                             Hostel ambience encourages self‑discipline, cooperation and respect for fellow students, truly making it a “Home away from Home”.
                         </p>
+                        <!-- Hero login button removed on purpose -->
                     </div>
 
                     <div class="hero-right">
@@ -1396,18 +1433,24 @@
         const mobileNav = document.getElementById("mobileNav");
         const navBackdrop = document.getElementById("navBackdrop");
 
+        // Improved scroll detection using viewport position
         function onScrollHighlight() {
-            const scrollPos = window.scrollY + 130;
-            let currentId = sections[0]?.id;
+            let currentId = "";
 
-            for (const section of sections) {
-                if (scrollPos >= section.offsetTop) {
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+
+                if (rect.top <= 150 && rect.bottom >= 150) {
                     currentId = section.id;
                 }
-            }
+            });
 
             headerLinks.forEach(link => {
-                link.classList.toggle("active", link.getAttribute("href") === "#" + currentId);
+                link.classList.remove("active");
+
+                if (link.getAttribute("href") === "#" + currentId) {
+                    link.classList.add("active");
+                }
             });
         }
 

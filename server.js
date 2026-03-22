@@ -234,6 +234,8 @@ app.post("/submit-hostel-form", async (req, res) => {
         res.status(500).json({ success: false, message: "Server Error" });
     }
 });
+
+
 app.get("/get-blocks", async (req, res) => {
     try {
         const role = req.query.role || "BHWARDEN";
@@ -242,21 +244,21 @@ app.get("/get-blocks", async (req, res) => {
             role === "BHWARDEN" ? "BOYS_HOSTEL" : "GIRLS_HOSTEL";
 
         const [rows] = await db.query(`
-            SELECT DISTINCT h.block_name
-            FROM hostel_management_system.hostel_admissions h
-            JOIN railway.students s
-                ON h.user_id = s.userId
-            WHERE s.residence_type = ?
-            ORDER BY h.block_name ASC
+            SELECT DISTINCT block_name
+            FROM hostel_admissions
+            WHERE residence_type = ?
+            ORDER BY block_name ASC
         `, [hostelType]);
 
-        res.json(rows || []);
+        res.json(rows);
 
     } catch (err) {
         console.error("GET BLOCKS ERROR:", err);
         res.json([]);
     }
 });
+
+
 app.get("/get-rooms/:block", async (req, res) => {
     const block = req.params.block;
 
@@ -267,13 +269,11 @@ app.get("/get-rooms/:block", async (req, res) => {
             role === "BHWARDEN" ? "BOYS_HOSTEL" : "GIRLS_HOSTEL";
 
         const [rows] = await db.query(`
-            SELECT DISTINCT h.room_number
-            FROM hostel_management_system.hostel_admissions h
-            JOIN railway.students s
-                ON h.user_id = s.userId
-            WHERE h.block_name = ?
-            AND s.residence_type = ?
-            ORDER BY h.room_number ASC
+            SELECT DISTINCT room_number
+            FROM hostel_management_system.hostel_admissions
+            WHERE block_name = ?
+            AND residence_type = ?
+            ORDER BY room_number ASC
         `, [block, hostelType]);
 
         res.json(rows || []);
@@ -294,13 +294,12 @@ app.get("/get-students/:block/:room", async (req, res) => {
             role === "BHWARDEN" ? "BOYS_HOSTEL" : "GIRLS_HOSTEL";
 
         const [rows] = await db.query(`
-            SELECT s.userId, s.name
-            FROM hostel_management_system.hostel_admissions h
-            JOIN railway.students s
-                ON h.user_id = s.userId
-            WHERE h.block_name = ?
-            AND h.room_number = ?
-            AND s.residence_type = ?
+            SELECT user_id, name
+            FROM hostel_management_system.hostel_admissions
+            WHERE block_name = ?
+            AND room_number = ?
+            AND residence_type = ?
+            ORDER BY name ASC
         `, [block, room, hostelType]);
 
         res.json(rows || []);
@@ -317,28 +316,32 @@ app.post("/submit-attendance", async (req, res) => {
     try {
         const sql = `
             INSERT INTO hostel_attendance 
-            (block_name, room_number, student_name, attendance, date)
-            VALUES (?, ?, ?, ?, ?)
+            (block_name, room_number, user_id, student_name, attendance, date)
+            VALUES (?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
             attendance = VALUES(attendance)
         `;
 
         for (let s of students) {
-            if (!s.attendance) continue; // skip unmarked
+            if (!s.attendance) continue;
+
+            // 🔥 SAFETY LOG
+            console.log("Inserting:", s);
 
             await db.execute(sql, [
-                block_name,
-                room_number,
-                s.name,
-                s.attendance,
-                date
+                block_name || null,
+                room_number || null,
+                s.userId || null,   // 🔥 IMPORTANT FIX
+                s.name || null,
+                s.attendance || null,
+                date || null
             ]);
         }
 
-        res.json({ success: true, message: "Attendance Saved Successfully!" });
+        res.json({ success: true });
 
     } catch (err) {
-        console.error(err);
+        console.error("Attendance Error:", err);
         res.status(500).json({ error: "Database Error" });
     }
 });
@@ -348,7 +351,7 @@ app.get("/get-attendance/:block/:room/:date", async (req, res) => {
 
     try {
         const [rows] = await db.query(
-            `SELECT student_name, attendance 
+            `SELECT user_id, student_name, attendance
              FROM hostel_attendance
              WHERE block_name = ? AND room_number = ? AND date = ?`,
             [block, room, date]
@@ -359,6 +362,8 @@ app.get("/get-attendance/:block/:room/:date", async (req, res) => {
         res.json([]);
     }
 });
+
+
 
 // ================================
 //      STUDENT REQUEST OUTPASS

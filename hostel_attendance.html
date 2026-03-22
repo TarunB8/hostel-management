@@ -827,7 +827,7 @@ function loadStudents(block, room, date){
   fetch(`/get-attendance/${encodeURIComponent(block)}/${encodeURIComponent(room)}/${encodeURIComponent(date)}`)
     .then(res => res.json())
     .then(existing => {
-      alreadyMarked = Array.isArray(existing) ? existing.map(e => e.student_name) : [];
+      alreadyMarked = Array.isArray(existing) ? existing.map(e => e.user_id) : [];
 
       return fetch(`/get-students/${encodeURIComponent(block)}/${encodeURIComponent(room)}?role=${encodeURIComponent(role)}`);
     })
@@ -846,9 +846,9 @@ function loadStudents(block, room, date){
       // Build base attendanceData for all NOT yet submitted students
       data.forEach(stu => {
         console.log("Student:", stu);
-        if (!alreadyMarked.includes(stu.name)) {
+        if (!alreadyMarked.includes(stu.user_id)) {
           attendanceData.push({
-            userId: stu.userId,
+            userId: stu.user_id,
             name: stu.name,
             attendance: null
           });
@@ -862,7 +862,7 @@ function loadStudents(block, room, date){
 
         const nameDiv = document.createElement("div");
         nameDiv.className = "student-name";
-        nameDiv.textContent = stu.name;
+        nameDiv.textContent = `${stu.name} (${stu.user_id})`;
 
         const btnWrap = document.createElement("div");
         btnWrap.className = "att-btns";
@@ -873,20 +873,20 @@ function loadStudents(block, room, date){
         const absent = document.createElement("button");
         absent.className = "absent-btn";
 
-        const isMarked = alreadyMarked.includes(stu.name);
+        const isMarked = alreadyMarked.includes(stu.user_id);
 
         if (isMarked) {
           // For students already in DB for this date+room:
           // disable buttons and show "Submitted" label
-          present.classList.add("disabled");
-          absent.classList.add("disabled");
+          present.disabled = true;
+          absent.disabled = true;
 
           const submitted = document.createElement("span");
           submitted.className = "submitted-badge";
           submitted.textContent = "Submitted";
           btnWrap.appendChild(submitted);
         } else {
-          const id = stu.userId;
+          const id = stu.user_id;
 
           present.addEventListener("click", () => {
             present.classList.add("selected");

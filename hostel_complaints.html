@@ -2,186 +2,582 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hostel Complaint</title>
+<title>Hostel Complaint | Student Portal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="crrengglogo.png" type="image/png" />
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css"
+/>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  --primary-color: #0b2e59;
+  --secondary-color: #2c6e91;
+  --accent-color: #f7a048;
+  --background-dark: #f0f2f5;
+  --background-light: #ffffff;
+  --text-dark: #111827;
+  --text-light: #f4f4f4;
+  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --border-radius-lg: 16px;
+  --border-radius-md: 10px;
+}
+
+/* Reset / Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #eef2f7;
+  background-color: var(--background-dark);
 }
 
-/* ================= Sidebar ================= */
+body.no-scroll {
+  overflow: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Layout */
+.container-root {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
 .sidebar {
-    position: fixed;
-    top: 0;
-    left: -220px;
-    width: 220px;
-    height: 100%;
-    background: #0b1c3c;
-    color: white;
-    padding-top: 60px;
-    transition: 0.3s;
-    z-index: 1000;
-}
-.sidebar a {
-    display: block;
-    padding: 15px;
-    color: white;
-    text-decoration: none;
-}
-.sidebar a:hover {
-    background: #1a3a60;
+  width: 280px;
+  background-color: var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+  overflow-y: auto;
 }
 
-/* ================= Top Bar ================= */
-.topbar {
-    background: #0b1c3c;
-    color: white;
-    padding: 15px;
-}
-.menu-btn {
-    font-size: 22px;
-    cursor: pointer;
+.photo-container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 20px;
 }
 
-/* ================= Content ================= */
-.content {
-    padding: 20px;
+.home-icon {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: var(--background-light);
+  color: var(--primary-color);
+  border-radius: 50%;
+  font-size: 22px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
-/* ================= Container ================= */
-.container {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #ccc;
+.home-icon:hover {
+  transform: scale(1.1);
+  background-color: var(--accent-color);
+  color: var(--text-light);
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
+.sidebar-photo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  border: 4px solid var(--accent-color);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+.sidebar h2 {
+  margin: 40px 20px 4px 20px;
+  color: var(--text-light);
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+
+.sidebar h3 {
+  margin: 0 20px 20px 20px;
+  color: #cfe4ff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1;
+}
+
+.menu li {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.menu li a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.98rem;
+  color: var(--text-light);
+  padding: 12px 18px;
+  border-radius: var(--border-radius-md);
+  transition: all 0.3s ease;
+}
+
+.menu li a:hover,
+.menu li.active a {
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: 500;
+  transform: translateX(5px);
+  box-shadow: var(--card-shadow);
+}
+
+.menu li a i {
+  font-size: 1.1rem;
+  width: 22px;
+  text-align: center;
+  color: var(--text-light);
+  transition: color 0.3s ease;
+}
+
+.logout {
+  background-color: var(--accent-color);
+  color: var(--text-light);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: bold;
+  width: 70%;
+  margin: 20px auto 10px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: block;
+  text-align: center;
+}
+
+.logout:hover {
+  background-color: #d3853b;
+  transform: scale(1.05);
+}
+
+/* Main Section */
+.main-section {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-dark);
+  padding: 40px 30px;
+  margin-left: 280px;
+  transition: margin-left 0.3s ease-in-out;
+  min-height: 100vh;
+}
+
+/* Card */
+.details-card {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  width: 100%;
+  max-width: 650px;
+  padding: 24px 24px 22px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.details-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
+.details-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.details-header {
+  margin-bottom: 14px;
+  text-align:left;
+}
+
+.details-header h1 {
+  font-size:1.4rem;
+  color:var(--primary-color);
+  margin-bottom:4px;
+}
+
+.details-header p {
+  font-size:0.9rem;
+  color:#4b5563;
+}
+
+/* Form */
 label {
-    font-weight: bold;
+  font-weight: 600;
+  font-size:0.9rem;
+  color:#111827;
 }
 
-select, textarea, button {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
+select,
+textarea,
+button {
+  width: 100%;
+  padding: 9px 10px;
+  margin: 8px 0 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.9rem;
+  background:#f9fafb;
+  outline:none;
+  transition:border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+select:focus,
+textarea:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 1px rgba(44,110,145,0.35);
+  background:#ffffff;
 }
 
 textarea {
-    resize: vertical;
-    min-height: 100px;
+  resize: vertical;
+  min-height: 110px;
 }
 
 button {
-    background: #007bff;
-    color: white;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  font-size: 0.98rem;
+  font-weight:600;
+  cursor: pointer;
+  border-radius: 999px;
+  margin-top:4px;
+  box-shadow:0 4px 14px rgba(37,99,235,0.5);
 }
 button:hover {
-    background: #0056b3;
+  transform:translateY(-1px);
+}
+
+/* Mobile Toggle & Overlay */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: var(--secondary-color);
+  color: var(--text-light);
+  font-size: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 999;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .main-section {
+    padding: 30px 20px;
+  }
+  .details-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .mobile-toggle {
+    display: flex;
+  }
+  .sidebar {
+    transform: translateX(-100%);
+    width: 250px;
+    max-width: 85vw;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main-section {
+    margin-left: 0;
+    padding: 20px;
+  }
+  .details-card {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    width: 220px;
+    max-width: 75vw;
+    padding: 20px 15px;
+  }
+  .sidebar h2 {
+    font-size: 1rem;
+  }
+  .menu li a {
+    font-size: 0.9rem;
+    padding: 12px 15px;
+  }
+  .details-card {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .mobile-toggle {
+    width: 40px;
+    height: 40px;
+  }
+  .sidebar {
+    width: 200px;
+  }
+  .details-card {
+    padding: 12px;
+  }
 }
 </style>
 </head>
-
 <body>
 
-<!-- ================= Top Bar ================= -->
-<div class="topbar">
-    <span class="menu-btn" onclick="toggleSidebar()">☰</span>
-    Hostel Complaint
+<!-- Mobile overlay -->
+<div class="overlay" onclick="toggleMobileMenu()"></div>
+
+<div class="container-root">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="photo-container">
+      <a href="index.html" class="home-icon" title="Hostel Home">
+        <i class="fas fa-home"></i>
+      </a>
+      <img id="sidebarPhoto" class="sidebar-photo" style="display: none;" />
+    </div>
+
+    <h2>Student ID: <span id="studentId">Loading...</span></h2>
+    <h3 id="studentNameLabel">Complaints</h3>
+
+    <ul class="menu">
+      <li>
+        <a href="hostel_student_dashboard.html">
+          <i class="fas fa-user-graduate"></i> Student Details
+        </a>
+      </li>
+        <li>
+    <a href="hostel_fee_payments.html">
+      <i class="fas fa-receipt"></i> Hostel Fee
+    </a>
+  </li>
+      <li>
+        <a href="hostel_student_outpass.html">
+          <i class="fas fa-external-link-alt"></i> Outpass
+        </a>
+      </li>
+      <li class="active">
+        <a href="hostel_complaints.html">
+          <i class="fas fa-comment-dots"></i> Complaints
+        </a>
+      </li>
+      <li>
+        <button class="logout" onclick="confirmLogout()">Logout</button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-section">
+    <div class="details-card">
+      <div class="details-header">
+        <h1>Raise a Complaint</h1>
+        <p>Submit hostel related issues like electrical, plumbing or carpentry problems for quick attention.</p>
+      </div>
+
+      <form action="/student/submit-complaint" method="POST">
+        <!-- HIDDEN FIELDS -->
+        <input type="hidden" name="user_id" id="user_id">
+        <input type="hidden" name="student_name" id="student_name">
+
+        <label>Complaint Category</label>
+        <select name="category" required>
+          <option value="">-- Select Category --</option>
+          <option value="Electrical">Electrical</option>
+          <option value="Plumbing">Plumbing</option>
+          <option value="Carpentry">Carpentry</option>
+        </select>
+
+        <label>Location of Complaint</label>
+        <select name="location" required>
+          <option value="">-- Select Location --</option>
+          <option value="Room">Room</option>
+          <option value="Corridor">Corridor</option>
+          <option value="Bathroom">Bathroom</option>
+          <option value="Stairs">Near Stairs</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label>Description</label>
+        <textarea
+          name="description"
+          placeholder="Describe the issue clearly..."
+          required></textarea>
+
+        <button type="submit">Submit Complaint</button>
+      </form>
+    </div>
+  </div>
 </div>
 
-<!-- ================= Sidebar ================= -->
-<div class="sidebar" id="sidebar">
-    <a href="student_dashboard.html">Student Details</a>
-    <a href="student_dashboard.html#">Outpass</a>
-    <a href="#">Complaint</a>
+<!-- Mobile FAB Toggle -->
+<div class="mobile-toggle" onclick="toggleMobileMenu()">
+  <i class="fas fa-bars"></i>
 </div>
 
-<!-- ================= Content ================= -->
-<div class="content">
-
-<div class="container">
-<h2>Raise a Complaint</h2>
-
-<form action="/student/submit-complaint" method="POST">
-
-    <!-- 🔒 HIDDEN FIELDS -->
-    <input type="hidden" name="user_id" id="user_id">
-    <input type="hidden" name="student_name" id="student_name">
-
-    <!-- CATEGORY -->
-    <label>Complaint Category</label>
-    <select name="category" required>
-        <option value="">-- Select Category --</option>
-        <option value="Electrical">Electrical</option>
-        <option value="Plumbing">Plumbing</option>
-        <option value="Carpentry">Carpentry</option>
-    </select>
-
-    <!-- LOCATION -->
-    <label>Location of Complaint</label>
-    <select name="location" required>
-        <option value="">-- Select Location --</option>
-        <option value="Room">Room</option>
-        <option value="Corridor">Corridor</option>
-        <option value="Bathroom">Bathroom</option>
-        <option value="Stairs">Near Stairs</option>
-        <option value="Other">Other</option>
-    </select>
-
-    <!-- DESCRIPTION -->
-    <label>Description</label>
-    <textarea 
-        name="description" 
-        placeholder="Describe the issue clearly..."
-        required></textarea>
-
-    <button type="submit">Submit Complaint</button>
-</form>
-
-</div>
-
-</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.all.min.js"></script>
 <script>
-const sidebar = document.getElementById("sidebar");
-const userId = localStorage.getItem("user_id");
+let userId = null;
 
-if (!userId) {
-    alert("Session expired. Please login again.");
-    window.location.href = "login.html";
+/* ===== MOBILE SIDEBAR ===== */
+function toggleMobileMenu() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.querySelector('.overlay');
+  const body = document.body;
+
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+  body.classList.toggle('no-scroll');
 }
 
-function toggleSidebar() {
-    sidebar.style.left = sidebar.style.left === "0px" ? "-220px" : "0px";
+/* ===== LOGOUT ===== */
+function confirmLogout() {
+  Swal.fire({
+    title: 'Logout?',
+    text: 'You will be logged out of this session.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#0b2e59',
+    cancelButtonColor: '#f7a048',
+    confirmButtonText: 'Yes, logout'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      logout();
+    }
+  });
 }
 
-/* ================= Fetch student data ================= */
-fetch(`/student/details/${userId}`)
-.then(res => res.json())
-.then(data => {
-    document.getElementById("user_id").value = data.user_id;
-    document.getElementById("student_name").value = data.name;
-})
-.catch(() => {
-    alert("Failed to load student details");
+function logout() {
+  fetch("/logout", { method: "GET", credentials: "include" })
+    .then(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+      if ("caches" in window) {
+        caches.keys().then(names => names.forEach(name => caches.delete(name)));
+      }
+      window.location.replace("login.html");
+    })
+    .catch(() => {
+      window.location.replace("login.html");
+    });
+}
+
+/* ===== AUTH & STUDENT DETAILS ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  userId = localStorage.getItem("user_id") || "";
+
+  if (!userId) {
+    Swal.fire({
+      title: 'Session Expired',
+      text: 'Please login again to raise a complaint.',
+      icon: 'warning',
+      confirmButtonText: 'Go to Login',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      confirmButtonColor: '#0b2e59'
+    }).then(() => {
+      window.location.href = "login.html";
+    });
+    return;
+  }
+
+  const studentIdSpan = document.getElementById("studentId");
+  const studentNameLabel = document.getElementById("studentNameLabel");
+  const sidebarPhoto = document.getElementById("sidebarPhoto");
+
+  studentIdSpan.textContent = userId;
+
+  sidebarPhoto.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userId)}&background=0b2e59&color=fff&rounded=true&bold=true&size=128`;
+  sidebarPhoto.style.display = "block";
+
+  // Fetch student data
+  fetch(`/student/details/${userId}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("user_id").value = data.user_id;
+      document.getElementById("student_name").value = data.name;
+      studentNameLabel.textContent = data.name || "Complaints";
+      sidebarPhoto.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || userId)}&background=0b2e59&color=fff&rounded=true&bold=true&size=128`;
+    })
+    .catch(() => {
+      Swal.fire('Error', 'Failed to load student details.', 'error');
+    });
 });
 </script>
-
-
 </body>
 </html>
+ 

@@ -2,202 +2,699 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hostel Fee Dashboard</title>
+<title>Hostel Fee Dashboard | Student Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="crrengglogo.png" type="image/png" />
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css"
+/>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  --primary-color: #0b2e59;
+  --secondary-color: #2c6e91;
+  --accent-color: #f7a048;
+  --background-dark: #f0f2f5;
+  --background-light: #ffffff;
+  --text-dark: #111827;
+  --text-light: #f4f4f4;
+  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --border-radius-lg: 16px;
+  --border-radius-md: 10px;
+  --success-color: #22c55e;
+}
+
+/* Reset / Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-    font-family: Arial;
-    background: #0f172a;
-    color: white;
-    padding: 20px;
+  background-color: var(--background-dark);
 }
 
-.container {
-    max-width: 1000px;
-    margin: auto;
+body.no-scroll {
+  overflow: hidden;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Layout */
+.container-root {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.photo-container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.home-icon {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: var(--background-light);
+  color: var(--primary-color);
+  border-radius: 50%;
+  font-size: 22px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.home-icon:hover {
+  transform: scale(1.1);
+  background-color: var(--accent-color);
+  color: var(--text-light);
+}
+
+.sidebar-photo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  border: 4px solid var(--accent-color);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar h2 {
+  margin: 40px 20px 4px 20px;
+  color: var(--text-light);
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+
+.sidebar h3 {
+  margin: 0 20px 20px 20px;
+  color: #cfe4ff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1;
+}
+
+.menu li {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.menu li a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.98rem;
+  color: var(--text-light);
+  padding: 12px 18px;
+  border-radius: var(--border-radius-md);
+  transition: all 0.3s ease;
+}
+
+.menu li a:hover,
+.menu li.active a {
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: 500;
+  transform: translateX(5px);
+  box-shadow: var(--card-shadow);
+}
+
+.menu li a i {
+  font-size: 1.1rem;
+  width: 22px;
+  text-align: center;
+  color: var(--text-light);
+  transition: color 0.3s ease;
+}
+
+.logout {
+  background-color: var(--accent-color);
+  color: var(--text-light);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: bold;
+  width: 70%;
+  margin: 20px auto 10px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: block;
+  text-align: center;
+}
+
+.logout:hover {
+  background-color: #d3853b;
+  transform: scale(1.05);
+}
+
+/* Main Section */
+.main-section {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-dark);
+  padding: 40px 30px;
+  margin-left: 280px;
+  transition: margin-left 0.3s ease-in-out;
+  min-height: 100vh;
+}
+
+/* Card */
+.details-card {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  width: 100%;
+  max-width: 1000px;
+  padding: 24px 24px 22px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.details-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
+.details-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.details-header {
+  margin-bottom: 14px;
+  text-align:left;
+}
+
+.details-header h1 {
+  font-size:1.4rem;
+  color:var(--primary-color);
+  margin-bottom:4px;
+}
+
+.details-header p {
+  font-size:0.9rem;
+  color:#4b5563;
+}
+
+/* Year and fee cards – light theme inside main card */
 .year-card {
-    background: #1e293b;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 12px;
+  background: #f9fafb;
+  padding: 18px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  border:1px solid #e5e7eb;
+}
+
+.year-card h3 {
+  margin-bottom: 6px;
+  font-size:1rem;
+  color:#111827;
 }
 
 .fee-card {
-    background: #334155;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: #ffffff;
+  padding: 12px 14px;
+  margin: 8px 0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border:1px solid #e5e7eb;
+  box-shadow:0 1px 4px rgba(15,23,42,0.06);
 }
 
-button {
-    padding: 8px 14px;
-    border: none;
-    background: #22c55e;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
+.fee-card h4 {
+  margin-bottom: 4px;
+  font-size:0.95rem;
+  color:#111827;
 }
 
-button:disabled {
-    background: gray;
-    cursor: not-allowed;
+.fee-card p {
+  margin: 2px 0;
+  font-size:0.86rem;
+  color:#4b5563;
+}
+
+.btn-pay {
+  padding: 8px 14px;
+  border: none;
+  background: linear-gradient(135deg,var(--success-color),#16a34a);
+  color: white;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size:0.85rem;
+  font-weight:600;
+  box-shadow:0 3px 10px rgba(22,163,74,0.6);
+}
+
+.btn-pay:disabled {
+  background: #6b7280;
+  box-shadow:none;
+  cursor: not-allowed;
 }
 
 .paid {
-    color: #22c55e;
+  color: #16a34a;
+  font-weight:600;
 }
 
 .pending {
-    color: #facc15;
+  color: #d97706;
+  font-weight:600;
+}
+
+/* Mobile Toggle & Overlay */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: var(--secondary-color);
+  color: var(--text-light);
+  font-size: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 999;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .main-section {
+    padding: 30px 20px;
+  }
+  .details-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .mobile-toggle {
+    display: flex;
+  }
+  .sidebar {
+    transform: translateX(-100%);
+    width: 250px;
+    max-width: 85vw;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main-section {
+    margin-left: 0;
+    padding: 20px;
+  }
+  .details-card {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    width: 220px;
+    max-width: 75vw;
+    padding: 20px 15px;
+  }
+  .sidebar h2 {
+    font-size: 1rem;
+  }
+  .menu li a {
+    font-size: 0.9rem;
+    padding: 12px 15px;
+  }
+  .details-card {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .mobile-toggle {
+    width: 40px;
+    height: 40px;
+  }
+  .sidebar {
+    width: 200px;
+  }
+  .details-card {
+    padding: 12px;
+  }
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
-    <h2>Hostel Fee Dashboard</h2>
-    <div id="fees"></div>
+<!-- Mobile overlay -->
+<div class="overlay" onclick="toggleMobileMenu()"></div>
+
+<div class="container-root">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="photo-container">
+      <a href="index.html" class="home-icon" title="Hostel Home">
+        <i class="fas fa-home"></i>
+      </a>
+      <img id="sidebarPhoto" class="sidebar-photo" style="display: none;" />
+    </div>
+
+    <h2>Student ID: <span id="studentId">Loading...</span></h2>
+    <h3 id="studentNameLabel">Hostel Fee</h3>
+
+    <ul class="menu">
+      <li>
+        <a href="hostel_student_dashboard.html">
+          <i class="fas fa-user-graduate"></i> Student Details
+        </a>
+      </li>
+      <li class="active">
+        <a href="hostel_fee_payments.html">
+          <i class="fas fa-receipt"></i> Hostel Fee
+        </a>
+      </li>
+      <li>
+        <a href="hostel_student_outpass.html">
+          <i class="fas fa-external-link-alt"></i> Outpass
+        </a>
+      </li>
+      <li>
+        <a href="hostel_complaints.html">
+          <i class="fas fa-comment-dots"></i> Complaints
+        </a>
+      </li>
+      <li>
+        <button class="logout" onclick="confirmLogout()">Logout</button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-section">
+    <div class="details-card">
+      <div class="details-header">
+        <h1>Hostel Fee Dashboard</h1>
+        <p>View your yearly hostel fee status and pay pending amounts via UPI.</p>
+      </div>
+
+      <div id="fees">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- Mobile FAB Toggle -->
+<div class="mobile-toggle" onclick="toggleMobileMenu()">
+  <i class="fas fa-bars"></i>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.all.min.js"></script>
 <script>
 const BASE_URL = window.location.hostname === "localhost"
   ? "http://localhost:3000"
   : "https://crrehostel.onrender.com";
 
-const user_id = localStorage.getItem("user_id");
+let user_id = null;
 
-if (!user_id) {
-    alert("Please login first");
-    window.location.href = "index.html";
+/* ===== MOBILE SIDEBAR ===== */
+function toggleMobileMenu() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.querySelector('.overlay');
+  const body = document.body;
+
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+  body.classList.toggle('no-scroll');
 }
 
-// ==============================
-// LOAD FEES (YEAR-WISE)
-// ==============================
+/* ===== LOGOUT ===== */
+function confirmLogout() {
+  Swal.fire({
+    title: 'Logout?',
+    text: 'You will be logged out of this session.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#0b2e59',
+    cancelButtonColor: '#f7a048',
+    confirmButtonText: 'Yes, logout'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      logout();
+    }
+  });
+}
+
+function logout() {
+  fetch("/logout", { method: "GET", credentials: "include" })
+    .then(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+      if ("caches" in window) {
+        caches.keys().then(names => names.forEach(name => caches.delete(name)));
+      }
+      window.location.replace("login.html");
+    })
+    .catch(() => {
+      window.location.replace("login.html");
+    });
+}
+
+/* ===== AUTH & INIT ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  user_id = localStorage.getItem("user_id") || "";
+
+  if (!user_id) {
+    Swal.fire({
+      title: 'Please login',
+      text: 'You must login to view hostel fee details.',
+      icon: 'warning',
+      confirmButtonText: 'Go to Login',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      confirmButtonColor: '#0b2e59'
+    }).then(() => {
+      window.location.href = "login.html";
+    });
+    return;
+  }
+
+  const studentIdSpan = document.getElementById("studentId");
+  const studentNameLabel = document.getElementById("studentNameLabel");
+  const sidebarPhoto = document.getElementById("sidebarPhoto");
+
+  studentIdSpan.textContent = user_id;
+
+  sidebarPhoto.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user_id)}&background=0b2e59&color=fff&rounded=true&bold=true&size=128`;
+  sidebarPhoto.style.display = "block";
+
+  // Optional: get student name for sidebar label
+  fetch(`/student/details/${user_id}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.name) {
+        studentNameLabel.textContent = data.name + " – Hostel Fee";
+        sidebarPhoto.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=0b2e59&color=fff&rounded=true&bold=true&size=128`;
+      }
+    })
+    .catch(() => {});
+
+  loadFees();
+});
+
+/* ==============================
+   LOAD FEES (YEAR-WISE)
+============================== */
 async function loadFees() {
-    try {
-        const res = await fetch(`${BASE_URL}/api/getFees/${user_id}`);
-        const data = await res.json();
+  try {
+    const res = await fetch(`${BASE_URL}/api/getFees/${user_id}`);
+    const data = await res.json();
 
-        const container = document.getElementById("fees");
-        container.innerHTML = "";
+    const container = document.getElementById("fees");
+    container.innerHTML = "";
 
-        if (!data.length) {
-            container.innerHTML = "<p>No fee data available</p>";
-            return;
-        }
-
-        data.forEach(yearData => {
-
-            const yearDiv = document.createElement("div");
-            yearDiv.className = "year-card";
-
-            yearDiv.innerHTML = `
-                <h3>Year ${yearData.year} (${yearData.academic_year || ""})</h3>
-            `;
-
-            yearData.fees.forEach(fee => {
-
-                const isPaid = fee.pending <= 0;
-
-                const feeDiv = document.createElement("div");
-                feeDiv.className = "fee-card";
-
-                feeDiv.innerHTML = `
-                    <div>
-                        <h4>${fee.type}</h4>
-                        <p>Total: ₹${fee.total}</p>
-                        <p class="${isPaid ? 'paid' : 'pending'}">
-                            Paid: ₹${fee.paid} | Pending: ₹${fee.pending}
-                        </p>
-                    </div>
-
-                    <button 
-                        onclick="pay('${fee.type}', ${fee.pending})"
-                        ${isPaid ? "disabled" : ""}
-                    >
-                        ${isPaid ? "Paid" : "Pay"}
-                    </button>
-                `;
-
-                yearDiv.appendChild(feeDiv);
-            });
-
-            container.appendChild(yearDiv);
-        });
-
-    } catch (err) {
-        console.error("Error loading fees:", err);
-        alert("Failed to load fees");
+    if (!Array.isArray(data) || !data.length) {
+      container.innerHTML = "<p style='font-size:0.9rem;color:#9ca3af;'>No fee data available.</p>";
+      return;
     }
+
+    data.forEach(yearData => {
+      const yearDiv = document.createElement("div");
+      yearDiv.className = "year-card";
+
+      yearDiv.innerHTML = `
+        <h3>Year ${yearData.year} ${yearData.academic_year ? '(' + yearData.academic_year + ')' : ''}</h3>
+      `;
+
+      yearData.fees.forEach(fee => {
+        const isPaid = fee.pending <= 0;
+
+        const feeDiv = document.createElement("div");
+        feeDiv.className = "fee-card";
+
+        feeDiv.innerHTML = `
+          <div>
+            <h4>${fee.type}</h4>
+            <p>Total: ₹${fee.total}</p>
+            <p class="${isPaid ? 'paid' : 'pending'}">
+              Paid: ₹${fee.paid} | Pending: ₹${fee.pending}
+            </p>
+          </div>
+          <button
+            class="btn-pay"
+            onclick="pay('${fee.type}', ${fee.pending})"
+            ${isPaid ? "disabled" : ""}
+          >
+            ${isPaid ? "Paid" : "Pay"}
+          </button>
+        `;
+
+        yearDiv.appendChild(feeDiv);
+      });
+
+      container.appendChild(yearDiv);
+    });
+
+  } catch (err) {
+    console.error("Error loading fees:", err);
+    Swal.fire('Error', 'Failed to load fee details.', 'error');
+  }
 }
 
-// ==============================
-// PAYMENT FUNCTION
-// ==============================
+/* ==============================
+   PAYMENT FUNCTION – SweetAlert2 prompt
+============================== */
 function pay(type, amount) {
+  if (!amount || amount <= 0) {
+    Swal.fire('Nothing to pay', 'No pending amount for this fee type.', 'info');
+    return;
+  }
 
-    if (!amount || amount <= 0) {
-        alert("Nothing to pay");
-        return;
-    }
+  const upi = `upi://pay?pa=hostel@upi&pn=CRRHostel&am=${amount}&cu=INR`;
 
-    // 🔹 UPI link
-    const upi = `upi://pay?pa=hostel@upi&pn=CRRHostel&am=${amount}&cu=INR`;
+  // Open UPI app
+  window.location.href = upi;
 
-    // 🔹 Open payment
-    window.location.href = upi;
+  // After some time, ask for transaction ID using SweetAlert2 input
+  setTimeout(() => {
+    Swal.fire({
+      title: 'Enter Transaction ID',
+      text: `After completing the payment for ₹${amount}, enter your UPI transaction ID below.`,
+      input: 'text',
+      inputPlaceholder: 'UPI Transaction ID',
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      confirmButtonColor: '#16a34a',
+      cancelButtonColor: '#6b7280',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Transaction ID is required';
+        }
+      }
+    }).then((result) => {
+      if (!result.isConfirmed || !result.value) return;
 
-    // 🔹 Ask txn ID after payment
-    setTimeout(() => {
+      const txn = result.value.trim();
 
-        const txn = prompt("Enter Transaction ID");
-
-        if (!txn) {
-            alert("Transaction ID required");
-            return;
+      fetch(`${BASE_URL}/api/addTransaction`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          user_id,
+          fee_type: type,
+          amount,
+          transaction_id: txn
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          Swal.fire('Error', data.error, 'error');
+          return;
         }
 
-        fetch(`${BASE_URL}/api/addTransaction`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                user_id,
-                fee_type: type,
-                amount,
-                transaction_id: txn
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-
-            alert("Transaction submitted (Waiting for verification)");
-            loadFees();
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Transaction failed");
-        });
-
-    }, 3000);
+        Swal.fire('Submitted', 'Transaction submitted (Waiting for verification).', 'success');
+        loadFees();
+      })
+      .catch(err => {
+        console.error(err);
+        Swal.fire('Error', 'Transaction failed. Please try again.', 'error');
+      });
+    });
+  }, 3000);
 }
-
-// ==============================
-// INIT
-// ==============================
-loadFees();
 </script>
-
 </body>
 </html>

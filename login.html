@@ -8,90 +8,104 @@
 
   <style>
     :root {
-      --main-color:#3cb6ff;
-      --accent-color:#ff3d3d;
-      --text-light:#fefefe;
-      --glow:0 0 15px var(--main-color);
+      --bg-dark:#021526;
+      --bg-card:rgba(255,255,255,0.08);
+      --bg-input:rgba(255,255,255,0.12);
+      --border-soft:rgba(255,255,255,0.25);
+      --main-color:#2196f3;
+      --accent-color:#ff4b6a;
+      --text-main:#f9fbff;
+      --text-muted:#c5d3e8;
       --focus:#ffd166;
+      --shadow-soft:0 18px 45px rgba(0,0,0,0.45);
     }
+
     *{
       margin:0;
       padding:0;
       box-sizing:border-box;
       font-family:'Poppins',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     }
+
     body{
-      background:url('https://upload.wikimedia.org/wikipedia/commons/9/92/C.R.Reddy_College_Aerial_View.jpg')
-                 no-repeat center center/cover;
       min-height:100vh;
-      overflow-y:auto;
-      position:relative;
       display:flex;
       flex-direction:column;
-      justify-content:flex-start;
       align-items:center;
-      color:#fff;
+      justify-content:space-between;
+      background:radial-gradient(circle at top left,#0f3b69 0%,#021526 45%,#000814 100%);
+      color:var(--text-main);
     }
-    .overlay{
-      background:rgba(0,0,0,0.65);
-      width:100%;
-      height:100%;
-      position:absolute;
-      top:0;
-      left:0;
+
+    /* Decorative blobs */
+    .bg-blob{
+      position:fixed;
+      border-radius:50%;
+      filter:blur(50px);
+      opacity:0.7;
       z-index:-1;
     }
+    .bg-blob.one{
+      width:420px;
+      height:420px;
+      background:radial-gradient(circle,#1e90ff,#42a5f5);
+      top:-120px;
+      left:-80px;
+    }
+    .bg-blob.two{
+      width:360px;
+      height:360px;
+      background:radial-gradient(circle,#ff4b6a,#ff9a8b);
+      bottom:-120px;
+      right:-40px;
+    }
+
     .main-wrapper{
+      width:100%;
+      max-width:1100px;
+      padding:24px 18px 16px;
       display:flex;
       flex-direction:column;
-      justify-content:flex-start;
       align-items:center;
-      min-height:100vh;
-      padding:24px 0 20px;
-      width:100%;
     }
+
     .branding{
       text-align:center;
-      animation:popIn 1.2s ease forwards;
-      margin-top:40px;
-      padding:0 12px;
+      animation:fadeDown 0.9s ease forwards;
+      margin-bottom:18px;
     }
     .brand-row{
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:12px;
+      gap:10px;
     }
     .branding img{
-      width:70px;
-      filter:drop-shadow(0 0 8px rgba(255,255,255,0.5));
-      animation:logoFloat 2s ease-in-out infinite alternate;
-    }
-    @keyframes logoFloat{
-      0%{transform:translateY(0)}
-      100%{transform:translateY(-6px);filter:drop-shadow(0 0 12px rgba(255,255,255,0.9));}
+      width:64px;
+      filter:drop-shadow(0 0 10px rgba(0,0,0,0.5));
+      animation:logoFloat 2.2s ease-in-out infinite alternate;
     }
     .branding h1{
-      font-size:26px;
-      text-shadow:var(--glow);
-    }
-    .autonomous{
-      font-size:18px;
-      font-weight:700;
-      color:#f19336fb;
-      margin-top:6px;
-      text-align:center;
-      text-shadow:0 0 8px rgba(255,0,0,0.6);
-    }
-    .system-heading{
       font-size:24px;
       font-weight:700;
-      color:#fff;
-      margin-top:18px;
-      margin-bottom:14px;
-      text-align:center;
-      text-shadow:0 0 12px rgba(60,182,255,0.8);
-      padding:0 12px;
+      color:var(--text-main);
+      text-shadow:0 0 16px rgba(0,0,0,0.6);
+    }
+    .autonomous{
+      font-size:16px;
+      font-weight:600;
+      color:#ffd166;
+      margin-top:6px;
+      letter-spacing:0.12em;
+    }
+    .system-heading{
+      font-size:22px;
+      font-weight:700;
+      margin-top:14px;
+      margin-bottom:12px;
+      color:var(--text-main);
+      text-shadow:0 0 18px rgba(33,150,243,0.9);
+      letter-spacing:0.05em;
     }
 
     /* Role buttons */
@@ -99,149 +113,368 @@
       display:flex;
       justify-content:center;
       flex-wrap:wrap;
-      gap:18px;
-      margin:18px 0 10px;
-      padding:0 12px;
+      gap:14px;
+      margin-bottom:18px;
     }
     .role-button{
-      padding:14px 30px;
-      font-size:17px;
-      border-radius:14px;
+      padding:10px 26px;
+      font-size:15px;
+      border-radius:999px;
       font-weight:600;
-      background:rgba(255,255,255,0.08);
-      color:#fff;
-      border:0;
+      background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));
+      color:var(--text-main);
+      border:1px solid rgba(255,255,255,0.16);
       cursor:pointer;
-      transition:0.3s ease;
+      transition:0.25s ease;
       position:relative;
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
     }
     .role-button::after{
       content:"";
       position:absolute;
       bottom:0;
-      left:0;
+      left:14%;
       height:3px;
       width:0;
-      background:var(--main-color);
-      transition:0.3s ease;
+      border-radius:99px;
+      background:linear-gradient(90deg,var(--main-color),var(--accent-color));
+      transition:0.25s ease;
     }
     .role-button:hover::after,
     .role-button.active::after{
-      width:100%;
+      width:72%;
     }
     .role-button:hover,
     .role-button.active,
     .role-button:focus-visible{
-      border:1.5px solid var(--main-color);
-      background:rgba(60,182,255,0.2);
-      box-shadow:0 0 12px var(--main-color);
-      outline:3px solid var(--focus);
+      border-color:var(--main-color);
+      box-shadow:0 0 18px rgba(33,150,243,0.7);
+      outline:2px solid var(--focus);
       outline-offset:2px;
+      transform:translateY(-1px);
     }
 
-    /* Login cards */
+    /* Shell: form + character */
+    .shell{
+      display:flex;
+      width:100%;
+      max-width:960px;
+      gap:22px;
+      align-items:stretch;
+      justify-content:center;
+      animation:fadeUp 0.9s ease forwards;
+    }
+
+    /* Login forms column */
+    .login-forms{
+      flex:1.1;
+      display:flex;
+    }
+
     .login-container{
       display:none;
       opacity:0;
-      transform:translateY(100px) scale(0.95);
-      transition:opacity 0.8s ease, transform 0.8s ease;
-      max-width:340px;
-      width:90%;
-      background:rgba(255,255,255,0.06);
-      border-radius:18px;
-      padding:20px 20px 22px;
-      border:1px solid rgba(255,255,255,0.16);
-      box-shadow:0 0 25px rgba(0,191,255,0.24);
-      margin-top:10px;
-      backdrop-filter:blur(16px);
-      -webkit-backdrop-filter:blur(16px);
+      transform:translateY(24px) scale(0.99);
+      transition:opacity 0.5s ease, transform 0.5s ease;
+      width:100%;
+      background:var(--bg-card);
+      border-radius:20px;
+      padding:20px 22px 22px;
+      border:1px solid var(--border-soft);
+      box-shadow:var(--shadow-soft);
+      backdrop-filter:blur(24px);
+      -webkit-backdrop-filter:blur(24px);
     }
     .login-container.show{
       display:block;
       opacity:1;
       transform:translateY(0) scale(1);
     }
+
     .login-container h2{
-      color:white;
-      text-align:center;
-      margin-bottom:16px;
-      font-size:20px;
+      font-size:18px;
+      margin-bottom:10px;
+      color:var(--text-main);
     }
+    .login-subtitle{
+      font-size:12px;
+      color:var(--text-muted);
+      margin-bottom:16px;
+    }
+
     .login-container label{
       font-size:13px;
-      margin-bottom:6px;
+      margin-bottom:5px;
       display:block;
+      color:var(--text-muted);
     }
     .login-container input{
       width:100%;
-      padding:11px 12px;
-      margin-bottom:15px;
+      padding:10px 12px;
+      margin-bottom:14px;
       border-radius:10px;
-      background:rgba(255,255,255,0.1);
-      border:1px solid rgba(255,255,255,0.25);
-      color:white;
+      background:var(--bg-input);
+      border:1px solid rgba(255,255,255,0.2);
+      color:var(--text-main);
+      font-size:14px;
+      transition:0.25s ease;
     }
-    .login-container input::placeholder{ color:#cbd5f5; }
+    .login-container input::placeholder{
+      color:rgba(197,211,232,0.8);
+    }
     .login-container input:focus-visible{
-      outline:3px solid var(--focus);
+      outline:2px solid var(--focus);
       outline-offset:2px;
+      border-color:var(--main-color);
+      background:rgba(255,255,255,0.18);
+      box-shadow:0 0 14px rgba(33,150,243,0.6);
     }
+
     .login-container button{
       width:100%;
-      padding:13px;
-      background:linear-gradient(135deg, var(--main-color), var(--accent-color));
+      padding:11px;
+      margin-top:4px;
+      border-radius:999px;
       border:none;
-      border-radius:50px;
+      background:linear-gradient(135deg,var(--main-color),#42a5f5);
       color:white;
-      font-weight:bold;
-      font-size:16px;
+      font-weight:600;
+      font-size:15px;
       cursor:pointer;
-      box-shadow:0 0 15px var(--main-color);
-      transition:transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow:0 10px 25px rgba(33,150,243,0.6);
+      transition:0.25s ease;
     }
     .login-container button:hover,
     .login-container button:focus-visible{
-      transform:scale(1.03);
-      box-shadow:0 0 25px var(--accent-color);
-      outline:3px solid var(--focus);
+      transform:translateY(-1px) scale(1.02);
+      box-shadow:0 16px 32px rgba(33,150,243,0.8);
+      outline:2px solid var(--focus);
       outline-offset:2px;
     }
+
     .error{
-      color:#ffb4b4;
+      color:#ffb3c1;
       text-align:center;
       margin-top:8px;
-      font-size:13px;
+      font-size:12px;
       min-height:18px;
+    }
+
+    /* Character column */
+    .character-panel{
+      flex:0.9;
+      max-width:320px;
+      background:var(--bg-card);
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,0.22);
+      box-shadow:var(--shadow-soft);
+      backdrop-filter:blur(26px);
+      -webkit-backdrop-filter:blur(26px);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      padding:18px 16px 16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .character-badge{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+      color:var(--text-muted);
+      margin-bottom:6px;
+    }
+
+    .character-circle{
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:radial-gradient(circle at 30% 18%,rgba(255,255,255,0.65),transparent 55%),
+                 radial-gradient(circle at 80% 80%,rgba(33,150,243,0.6),rgba(2,21,38,0.9));
+      border:1.6px solid rgba(255,255,255,0.45);
+      box-shadow:0 0 30px rgba(33,150,243,0.9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+      margin-top:6px;
+      animation:float 4s ease-in-out infinite;
+    }
+
+    .character-orbit{
+      position:absolute;
+      width:230px;
+      height:230px;
+      border-radius:50%;
+      border:1px dashed rgba(197,211,232,0.55);
+      animation:orbitRotate 13s linear infinite;
+      pointer-events:none;
+    }
+    .character-orbit::before,
+    .character-orbit::after{
+      content:"";
+      position:absolute;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#fff;
+      box-shadow:0 0 14px rgba(255,255,255,0.9);
+    }
+    .character-orbit::before{
+      top:-6px;
+      left:50%;
+      transform:translateX(-50%);
+    }
+    .character-orbit::after{
+      bottom:-6px;
+      right:14%;
+    }
+
+    .character-emoji{
+      font-size:82px;
+      filter:drop-shadow(0 0 10px rgba(0,0,0,0.65));
+      animation:breath 3.2s ease-in-out infinite;
+      transition:transform 0.4s ease;
+    }
+
+    .character-panel.is-greeting .character-emoji{
+      animation:wave 1.5s ease-in-out infinite;
+      transform-origin:bottom center;
+    }
+
+    .character-panel.is-shy .character-emoji{
+      transform:translateY(6px) scale(0.95);
+    }
+
+    .char-title{
+      font-size:16px;
+      font-weight:600;
+      margin-top:10px;
+      color:var(--text-main);
+    }
+    .char-tagline{
+      font-size:12px;
+      color:var(--text-muted);
+      margin-top:2px;
+      margin-bottom:10px;
+    }
+
+    .char-message{
+      margin-top:8px;
+      padding:10px 13px;
+      border-radius:14px;
+      background:rgba(2,21,38,0.94);
+      border:1px solid rgba(148, 163, 184,0.7);
+      font-size:12px;
+      color:var(--text-main);
+      text-align:center;
+      box-shadow:0 0 20px rgba(0,0,0,0.8);
+      position:relative;
+    }
+    .char-message::before{
+      content:"";
+      position:absolute;
+      top:-8px;
+      left:50%;
+      transform:translateX(-50%);
+      border-width:0 8px 10px 8px;
+      border-style:solid;
+      border-color:transparent transparent rgba(2,21,38,0.94) transparent;
+    }
+
+    .char-footer-note{
+      font-size:11px;
+      color:var(--text-muted);
+      margin-top:10px;
+    }
+
+    /* Animations */
+    @keyframes fadeDown{
+      from{opacity:0; transform:translateY(-18px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+    @keyframes fadeUp{
+      from{opacity:0; transform:translateY(18px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+    @keyframes logoFloat{
+      0%{transform:translateY(0);}
+      100%{transform:translateY(-5px);}
+    }
+    @keyframes float{
+      0%{transform:translateY(0);}
+      50%{transform:translateY(-8px);}
+      100%{transform:translateY(0);}
+    }
+    @keyframes breath{
+      0%{transform:scale(1);}
+      50%{transform:scale(1.04);}
+      100%{transform:scale(1);}
+    }
+    @keyframes wave{
+      0%{transform:rotate(0deg);}
+      20%{transform:rotate(12deg);}
+      40%{transform:rotate(-10deg);}
+      60%{transform:rotate(8deg);}
+      80%{transform:rotate(-6deg);}
+      100%{transform:rotate(0deg);}
+    }
+    @keyframes orbitRotate{
+      from{transform:rotate(0deg);}
+      to{transform:rotate(360deg);}
     }
 
     .footer{
       text-align:center;
       padding:10px;
-      color:#ccc;
-      font-size:13px;
-      background:rgba(0,0,0,0.6);
+      color:var(--text-muted);
+      font-size:12px;
       width:100%;
-      margin-top:24px;
-    }
-    .footer a{ color:#3cb6ff; text-decoration:underline; }
-
-    @keyframes popIn{
-      0%{opacity:0; transform:translateY(20px);}
-      100%{opacity:1; transform:translateY(0);}
     }
 
-    @media(max-width:480px){
-      .branding h1{ font-size:20px; }
-      .system-heading{ font-size:19px; }
-      .role-button{ font-size:15px; padding:12px 22px; }
-      .login-container{ margin:16px; padding:18px; }
+    /* Responsive */
+    @media(max-width:880px){
+      .shell{
+        flex-direction:column;
+        align-items:stretch;
+        max-width:640px;
+      }
+      .character-panel{
+        max-width:none;
+        order:-1;
+      }
+    }
+
+    @media(max-width:520px){
+      .branding h1{font-size:20px;}
+      .system-heading{font-size:18px;}
+      .role-button{
+        font-size:13px;
+        padding:8px 18px;
+      }
+      .login-container{
+        padding:18px 18px 20px;
+      }
+      .character-circle{
+        width:150px;
+        height:150px;
+      }
+      .character-emoji{
+        font-size:64px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="overlay" aria-hidden="true"></div>
+  <!-- background blobs -->
+  <div class="bg-blob one"></div>
+  <div class="bg-blob two"></div>
 
-  <main class="main-wrapper" id="main" role="main" aria-label="CRR Hostel Management System">
+  <main class="main-wrapper" role="main" aria-label="CRR Hostel Management System">
     <!-- Branding -->
     <div class="branding" role="banner">
       <div class="brand-row">
@@ -249,9 +482,8 @@
         <h1>Sir C.R. Reddy College of Engineering</h1>
       </div>
       <h2 class="autonomous">(AUTONOMOUS)</h2>
+      <div class="system-heading">HOSTEL MANAGEMENT SYSTEM</div>
     </div>
-
-    <div class="system-heading">HOSTEL MANAGEMENT SYSTEM</div>
 
     <!-- Role selector -->
     <div class="role-buttons" role="group" aria-label="Select hostel role">
@@ -260,61 +492,87 @@
       <button class="role-button" data-role="admin" type="button">🛡️ Admin</button>
     </div>
 
-    <!-- Student login -->
-    <section class="login-container" id="student-login" role="region" aria-label="Student login" aria-hidden="true">
-      <h2>Student Hostel Login</h2>
-      <form class="login-form" data-role="student">
-        <label for="studentUserId">User ID</label>
-        <input id="studentUserId" name="user_id" type="text" autocomplete="username"
-               placeholder="Enter Student ID" required />
+    <!-- Shell: login + character -->
+    <section class="shell" aria-label="Login with animated assistant">
+      <!-- Left: login forms -->
+      <div class="login-forms">
+        <!-- Student login -->
+        <section class="login-container" id="student-login" role="region" aria-label="Student login" aria-hidden="true">
+          <h2>Student Hostel Login</h2>
+          <p class="login-subtitle">Use your student ID and hostel password to continue.</p>
+          <form class="login-form" data-role="student">
+            <label for="studentUserId">User ID</label>
+            <input id="studentUserId" name="user_id" type="text" autocomplete="username"
+                   placeholder="Enter Student ID" required />
 
-        <label for="studentPwd">Password</label>
-        <input id="studentPwd" name="password" type="password" autocomplete="current-password"
-               placeholder="Enter Password" required />
+            <label for="studentPwd">Password</label>
+            <input id="studentPwd" name="password" type="password" autocomplete="current-password"
+                   placeholder="Enter Password" required />
 
-        <button type="submit">Login as Student</button>
-        <div class="error"></div>
-      </form>
-    </section>
+            <button type="submit">Login as Student</button>
+            <div class="error"></div>
+          </form>
+        </section>
 
-    <!-- Warden login -->
-    <section class="login-container" id="warden-login" role="region" aria-label="Warden login" aria-hidden="true">
-      <h2>Warden Hostel Login</h2>
-      <form class="login-form" data-role="warden">
-        <label for="wardenUserId">User ID</label>
-        <input id="wardenUserId" name="user_id" type="text" autocomplete="username"
-               placeholder="Enter Warden ID" required />
+        <!-- Warden login -->
+        <section class="login-container" id="warden-login" role="region" aria-label="Warden login" aria-hidden="true">
+          <h2>Warden Portal Login</h2>
+          <p class="login-subtitle">Manage hostel rooms, students and reports.</p>
+          <form class="login-form" data-role="warden">
+            <label for="wardenUserId">User ID</label>
+            <input id="wardenUserId" name="user_id" type="text" autocomplete="username"
+                   placeholder="Enter Warden ID" required />
 
-        <label for="wardenPwd">Password</label>
-        <input id="wardenPwd" name="password" type="password" autocomplete="current-password"
-               placeholder="Enter Password" required />
+            <label for="wardenPwd">Password</label>
+            <input id="wardenPwd" name="password" type="password" autocomplete="current-password"
+                   placeholder="Enter Password" required />
 
-        <button type="submit">Login as Warden</button>
-        <div class="error"></div>
-      </form>
-    </section>
+            <button type="submit">Login as Warden</button>
+            <div class="error"></div>
+          </form>
+        </section>
 
-    <!-- Admin login -->
-    <section class="login-container" id="admin-login" role="region" aria-label="Admin login" aria-hidden="true">
-      <h2>Admin Hostel Login</h2>
-      <form class="login-form" data-role="admin">
-        <label for="adminUserId">User ID</label>
-        <input id="adminUserId" name="user_id" type="text" autocomplete="username"
-               placeholder="Enter Admin ID" required />
+        <!-- Admin login -->
+        <section class="login-container" id="admin-login" role="region" aria-label="Admin login" aria-hidden="true">
+          <h2>Admin Control Login</h2>
+          <p class="login-subtitle">Access system settings and admin dashboard.</p>
+          <form class="login-form" data-role="admin">
+            <label for="adminUserId">User ID</label>
+            <input id="adminUserId" name="user_id" type="text" autocomplete="username"
+                   placeholder="Enter Admin ID" required />
 
-        <label for="adminPwd">Password</label>
-        <input id="adminPwd" name="password" type="password" autocomplete="current-password"
-               placeholder="Enter Password" required />
+            <label for="adminPwd">Password</label>
+            <input id="adminPwd" name="password" type="password" autocomplete="current-password"
+                   placeholder="Enter Password" required />
 
-        <button type="submit">Login as Admin</button>
-        <div class="error"></div>
-      </form>
+            <button type="submit">Login as Admin</button>
+            <div class="error"></div>
+          </form>
+        </section>
+      </div>
+
+      <!-- Right: animated character -->
+      <aside class="character-panel" aria-label="Friendly login assistant">
+        <div class="character-badge">Interactive assistant</div>
+        <div class="character-circle">
+          <div class="character-orbit"></div>
+          <div class="character-emoji" id="characterEmoji">🧑‍🎓</div>
+        </div>
+        <div class="char-title" id="charTitle">Hostel Buddy</div>
+        <div class="char-tagline">A fun little assistant reacting to your login.</div>
+        <div class="char-message" id="charMessage">
+          Welcome to the CRR Hostel Portal! Choose your role and start logging in.
+        </div>
+        <div class="char-footer-note">
+          Tip: Watch how I react when you type your ID and password.
+        </div>
+      </aside>
     </section>
   </main>
 
-  <div class="footer" role="contentinfo">
+  <footer class="footer" role="contentinfo">
     Developed by Cyber Security Students | Hostel Management Portal
-  </div>
+  </footer>
 
   <script>
     // Role toggle
@@ -345,68 +603,215 @@
         roleButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         showContainer(role);
+        setCharacterIdle();
       });
     });
 
-    // Default: show student
-    (function initDefault() {
+    // Default student
+    (function initDefault(){
       const first = document.querySelector('.role-button[data-role="student"]');
-      if (first) {
+      if(first){
         first.classList.add("active");
         showContainer("student");
       }
     })();
 
-    // Login submit (uses /login like your original page)
-    document.querySelectorAll(".login-form").forEach(form => {
-      form.addEventListener("submit", async function(e) {
+    // Character logic
+    const characterPanel = document.querySelector(".character-panel");
+    const characterEmoji = document.getElementById("characterEmoji");
+    const charMessage = document.getElementById("charMessage");
+    const charTitle = document.getElementById("charTitle");
+
+    const characters = [
+      {
+        name:"Student Buddy",
+        emoji:"🧑‍🎓",
+        shyEmoji:"🙈",
+        idleMessage:"Ready for another day in the hostel? I’m here to help you log in.",
+        helloMessages:[
+          "Welcome back! Let’s get you to your room dashboard 👋",
+          "Hello there! Great to see you again 😄",
+          "Hey champ, type your ID to continue 🚀"
+        ],
+        passwordMessages:[
+          "Don’t worry, I’ll keep your password safe 🔒",
+          "Eyes closed, no peeking from me 🙈",
+          "Your secret stays between you and the server 🤝"
+        ]
+      },
+      {
+        name:"Guardian Bear",
+        emoji:"🐻",
+        shyEmoji:"🙈",
+        idleMessage:"I’m guarding your hostel portal with extra fluff and care.",
+        helloMessages:[
+          "Rawr! Just kidding, welcome back 🐻",
+          "Hey buddy, hostel missed you! 👋",
+          "You’re back! Let’s log in quickly 🧸"
+        ],
+        passwordMessages:[
+          "I’ll cover my eyes while you type 🙈",
+          "Bear promise, your password is safe 🔐",
+          "No peeking from this bear, type away 😌"
+        ]
+      },
+      {
+        name:"Fox Coder",
+        emoji:"🦊",
+        shyEmoji:"🙈",
+        idleMessage:"Smart, quick and secure—just like your login.",
+        helloMessages:[
+          "Hey clever one, ready to log in? 🦊",
+          "Nice to see you again, hostel awaits 👋",
+          "Let’s slide into the dashboard, securely of course 😄"
+        ],
+        passwordMessages:[
+          "Stealth mode on, I can’t see a thing 🙈",
+          "Typing in secret fox mode 🔒",
+          "Your password is encrypted in my brain (just kidding) 🤝"
+        ]
+      },
+      {
+        name:"Robo Warden",
+        emoji:"🤖",
+        shyEmoji:"🙈",
+        idleMessage:"Systems online. Standing by for secure authentication.",
+        helloMessages:[
+          "User detected. Welcome back 🤖",
+          "Hello there, initiating login protocol 👋",
+          "Great to see you again, human user 😄"
+        ],
+        passwordMessages:[
+          "Optical sensors disabled. I can’t see your password 🙈",
+          "Encrypting each character as you type 🔐",
+          "Trust this friendly robot, your secret is safe 🤝"
+        ]
+      }
+    ];
+
+    const activeCharacter = characters[Math.floor(Math.random() * characters.length)];
+
+    if(charTitle && activeCharacter.name){
+      charTitle.textContent = activeCharacter.name;
+    }
+
+    let isTypingPassword = false;
+
+    function randomFrom(arr){
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function setCharacterIdle(){
+      if(!characterPanel) return;
+      isTypingPassword = false;
+      characterPanel.classList.remove("is-greeting","is-shy");
+      characterEmoji.textContent = activeCharacter.emoji;
+      charMessage.textContent = activeCharacter.idleMessage;
+    }
+
+    function setCharacterGreeting(){
+      if(!characterPanel) return;
+      isTypingPassword = false;
+      characterPanel.classList.add("is-greeting");
+      characterPanel.classList.remove("is-shy");
+      characterEmoji.textContent = activeCharacter.emoji;
+      charMessage.textContent = randomFrom(activeCharacter.helloMessages);
+    }
+
+    function setCharacterShy(){
+      if(!characterPanel) return;
+      characterPanel.classList.add("is-shy");
+      characterPanel.classList.remove("is-greeting");
+      characterEmoji.textContent = activeCharacter.shyEmoji || "🙈";
+      charMessage.textContent = randomFrom(activeCharacter.passwordMessages);
+    }
+
+    // init idle
+    setCharacterIdle();
+
+    const userIdInputs = document.querySelectorAll('input[name="user_id"]');
+    const passwordInputs = document.querySelectorAll('input[name="password"]');
+
+    userIdInputs.forEach(input=>{
+      input.addEventListener("focus",()=>{
+        setCharacterGreeting();
+      });
+      input.addEventListener("blur",()=>{
+        if(!isTypingPassword){
+          setCharacterIdle();
+        }
+      });
+    });
+
+    passwordInputs.forEach(input=>{
+      input.addEventListener("input",(e)=>{
+        if(e.target.value.length>0){
+          isTypingPassword = true;
+          setCharacterShy();
+        }else{
+          isTypingPassword = false;
+          setCharacterIdle();
+        }
+      });
+      input.addEventListener("focus",()=>{
+        if(input.value.length>0){
+          isTypingPassword = true;
+          setCharacterShy();
+        }
+      });
+      input.addEventListener("blur",()=>{
+        isTypingPassword = false;
+        setCharacterIdle();
+      });
+    });
+
+    // Login submit (same /login API)
+    document.querySelectorAll(".login-form").forEach(form=>{
+      form.addEventListener("submit",async function(e){
         e.preventDefault();
 
-        const role = this.dataset.role; // student / warden / admin
+        const role = this.dataset.role;
         const user_id = this.user_id.value.trim();
         const password = this.password.value.trim();
         const errorBox = this.querySelector(".error");
         errorBox.textContent = "";
 
-        if (!user_id || !password) {
+        if(!user_id || !password){
           errorBox.textContent = "Please enter User ID and Password.";
           return;
         }
 
-        try {
-          const res = await fetch("/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_id, password, role })
+        try{
+          const res = await fetch("/login",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({user_id,password,role})
           });
 
           const data = await res.json();
 
-          if (!data.success) {
+          if(!data.success){
             errorBox.textContent = data.message || "Login failed. Check your credentials.";
             return;
           }
 
-          // clear & store
           localStorage.clear();
-          localStorage.setItem("user_id", data.user_id || user_id);
-          localStorage.setItem("role", data.role || role);
+          localStorage.setItem("user_id",data.user_id || user_id);
+          localStorage.setItem("role",data.role || role);
 
           const finalRole = data.role || role;
 
-          // redirects – change paths as needed
-          if (finalRole === "student") {
+          if(finalRole === "student"){
             window.location.href = "hostel_student_dashboard.html";
-          } else if (finalRole === "warden") {
+          }else if(finalRole === "warden"){
             window.location.href = "hostel_warden_dashboard.html";
-          } else if (finalRole === "admin") {
+          }else if(finalRole === "admin"){
             window.location.href = "hostel_admin_dashboard.html";
-          } else {
+          }else{
             errorBox.textContent = "Unknown role from server.";
           }
-        } catch (err) {
-          console.error("Login error:", err);
-          const errorBox = this.querySelector(".error");
+        }catch(err){
+          console.error("Login error:",err);
           errorBox.textContent = "Server error. Please try again.";
         }
       });
